@@ -11,7 +11,7 @@ import (
 
 func startHTTPServer(ctx context.Context, handler http.Handler, logger *log.Logger) (url string, shutdown context.CancelFunc, err error) {
 	// Need to generate a random port every time for tests in parallel to run.
-	l, err := net.Listen("tcp", "localhost:")
+	l, err := net.Listen("tcp", "kultstory.internal:")
 	if err != nil {
 		return "", nil, err
 	}
@@ -43,9 +43,10 @@ func startHTTPServer(ctx context.Context, handler http.Handler, logger *log.Logg
 		startShutdown()
 		<-shutdownComplete
 	}
-	url = (&neturl.URL{
+	url2 := &neturl.URL{
 		Scheme: "http",
 		Host:   l.Addr().String(),
-	}).String()
-	return url, shutdown, nil
+	}
+
+	return "http://kultstory.internal:" + url2.Port(), shutdown, nil
 }
